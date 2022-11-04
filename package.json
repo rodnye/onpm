@@ -1,0 +1,20 @@
+{
+  "name": "npm-offline",
+  "version": "1.0.0",
+  "description": "offline npm manager",
+  "main": "main.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rodny Estrada",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RodnyE/NPM-Offline.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RodnyE/NPM-Offline/issues"
+  },
+  "homepage": "https://github.com/RodnyE/NPM-Offline#readme"
+}
