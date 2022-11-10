@@ -4,7 +4,6 @@ const path = require("path");
 const packageManager = require("./package-manager.js");
 const PATH = "./node_modules";
 
-
 //// INSTALADOR DE PAQUETES OFFLINE
 const Installer = class {
   constructor (projectPath) {
@@ -30,7 +29,15 @@ const Installer = class {
     let from = path.join(PATH, name);
     let to = path.join(this.node_modules, name);
    
+    // si el modulo aún no existe
     if (!fs.existsSync(to)) {
+      
+      // si es un directorio de modulos
+      if (/^@/.test(name)) {
+        let submoduleDir = path.join(to, "..");
+        if (!fs.existsSync(submoduleDir)) fs.mkdirSync(submoduleDir);
+      }
+      
       fs.cpdirSync(from, to);
       
       // si tiene dependencias continuar recursion
