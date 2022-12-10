@@ -19,11 +19,12 @@ const Installer = class {
     flags = flags.split(" ");
     let modPath = path.join(PATH, name);
     let mod;
+    
     if (fs.existsSync(modPath)) {
       mod = fs.readFileSync(path.join(modPath, "package.json"));
       mod = JSON.parse(mod);
     }
-    else return console.error("ERROR: " + name + " module is not available, please install and save in this ./node_modules folder to take it offline");
+    else throw new Error("ERROR: " + name + " module is not available, please install and save in this ./node_modules folder to take it offline");
     
     // copiar modulo
     let from = path.join(PATH, name);
@@ -42,15 +43,17 @@ const Installer = class {
       
       // si tiene dependencias continuar recursion
       if (mod.dependencies) {
-        for (let dep in mod.dependencies) this.install(dep);
+        for (let dep in mod.dependencies) this.install(dep, "--hide");
       }
       console.log("Complete: Install " + name + " at: " + this.dir);
     }
     
     // guardar en package.json
-    if (flags.includes("--save")) this.package.addDependency(name, "^" + mod.version);
-    if (flags.includes("--save-dev")) this.package.addDevDependency(name, "^" + mod.version);
-    this.package.save();
+    if (!flags.includes("--hide")) {
+      if (flags.includes("--save")) this.package.addDependency(name, "^" + mod.version);
+      if (flags.includes("--save-dev")) this.package.addDevDependency(name, "^" + mod.version);
+      this.package.save();
+    }
     
   }
   

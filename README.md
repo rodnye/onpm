@@ -15,29 +15,20 @@ Luego de realizado este proceso, ya estos modulos estarán disponibles para inst
 
 
 ## Instalar modulos offline
-Primero se debe configurar el archivo `~task.json`.
-Por ejemplo: 
-```javascript
-{
-  "project": "/storage/emulated/0/my-repo",
- 
-  "install": [
-    "express", 
-    "body-parser",
-    "moment"
-  ],
-  
-  "dev": [
-    "gulp", "gulp-concat"
-  ]
-}
+```linux
+node main.js <path> <modules>
 ```
 
-- `project`: ubicación donde instalar módulos.
-- `install`: módulos a instalar, serán guardados en las dependencias del `package.json`.
-- `dev`: igual que `install`, pero será guardado en las dependecias de desarrollador.
+Ejemplo si se quiere instalar los modulos `express` y `moment`:
+```linux
+node main.js /storage/emulated/0/my-repo --save express moment
+```
 
-Luego de rellenado el archivo se puede proceder a iniciarlo:
-```
-node main.js
-```
+## Parámetros (flags)
+| Flag | Descripción |
+|----  |----------- |
+| `--hide` | Instalar modulos pero no indicarlos en el package.json |
+| `--save` | Guardar modulos como dependencias |
+| `--save-dev` | Guardar modulos como dependencias de desarrollador |
+| `--pkg` | Instalar dependencias a partir del package.json de la ruta |
+| `--pkg-dev` | Instalar dependencias de desarrollador a partir del package.json de la ruta |

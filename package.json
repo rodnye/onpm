@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "description": "offline npm manager",
   "main": "main.js",
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Rodny Estrada",
   "license": "MIT",
   "repository": {
