@@ -18,7 +18,7 @@ fs.cpdirSync = function (currentDir, targetDir) {
       fs.mkdirSync(copyDir);
       for (let i of fs.readdirSync(realDir)) recursive(path.join(dir, i));
     }
-    else fs.writeFileSync(copyDir, fs.readFileSync(realDir));
+    else fs.copyFileSync(realDir, copyDir);
   }
 };
 
