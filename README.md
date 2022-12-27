@@ -1,33 +1,44 @@
 # NPM Offline
-Instalador de modulos NPM sin conexión a internet. 
-Requiere que los módulos esten disponibles en la carpeta `./node_modules` de este repositorio para poder instalarlos offline a otros proyectos locales.
+Instalador de modulos NPM sin conexión a internet.
 
-## Añadir modulos
-"NPM Offline" no puede trabajar si no tiene modulos instalados.
-Instale los que usted necesite utilizando `npm install <module>`:
+## Instalar CLI
+Clone este repositorio, y luego utilice `npm link`:
+```shell
+$git clone https://github.com/RodnyE/NPM-Offline
+$cd ./NPM-Offline
+$npm link
 ```
-cd /path/folder/npm-offline
-npm install fs-extras
-npm install express
-...
+
+Con estos tres pasos ya npm-offline está listo para usar.  
+Pondrá a su disposición el comando `onpm`
+
+## Uso de CLI
+### `onpm download`
+"NPM Offline" no puede trabajar si no tiene modulos descargados.
+Descargue los que usted necesite utilizando `onpm download <module>`, por ejemplo:
+```shell
+$onpm download express
 ```
-Luego de realizado este proceso, ya estos modulos estarán disponibles para instalarlos sin conexión cuantas veces quiera en otros proyectos.
+Luego de realizado este proceso, ya los modulos descargados estarán disponibles para instalarlos sin conexión cuantas veces quiera en otros proyectos.
 
 
-## Instalar modulos offline
-```linux
-node main.js <path> <modules>
+### onpm install
+Similar al comando `npm install`, este es el comando para instalar los modulos en su proyecto de NodeJs, con la ligera diferencia que ya no será desde internet.  
+Su estructura es `onpm install <modules>`:
+```shell
+$cd /MiProyecto
+$onpm install express
 ```
 
 Ejemplo si se quiere instalar los modulos `express` y `moment`:
-```linux
-node main.js /storage/emulated/0/my-repo --save express moment
+```shell
+$onpm install --save express moment
 ```
 
-## Parámetros (flags)
+## Opciones (flags)
 | Flag | Descripción |
 |----  |----------- |
-| `--hide` | Instalar modulos pero no indicarlos en el package.json |
+| `--hide` o `--no-save` | Instalar modulos pero no indicarlos en el package.json |
 | `--save` | Guardar modulos como dependencias |
 | `--save-dev` | Guardar modulos como dependencias de desarrollador |
 | `--pkg` | Instalar dependencias a partir del package.json de la ruta |

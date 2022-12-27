@@ -1,10 +1,11 @@
 {
-  "name": "npm-offline",
+  "name": "onpm",
   "version": "1.0.0",
   "description": "offline npm manager",
   "main": "main.js",
   "author": "Rodny Estrada",
   "license": "MIT",
+  "bin": "./main.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RodnyE/NPM-Offline.git"
@@ -12,5 +13,8 @@
   "bugs": {
     "url": "https://github.com/RodnyE/NPM-Offline/issues"
   },
-  "homepage": "https://github.com/RodnyE/NPM-Offline#readme"
+  "homepage": "https://github.com/RodnyE/NPM-Offline#readme",
+  "dependencies": {
+    "colors": "^1.4.0"
+  }
 }
