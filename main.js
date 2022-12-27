@@ -17,7 +17,9 @@ const available = [
   "--save",
   "--save-dev",
   "--hide",
-  "--no-save"
+  "--no-save",
+  "--pkg",
+  "--pkg-dev"
 ];
 while (args.length) {
   let arg = args.shift();
