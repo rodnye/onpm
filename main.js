@@ -40,12 +40,15 @@ opt.arg0 = opt.args[0];
  * Si se desean descargar los modulos
  */
 if (opt.arg0 === "download") {
-  console.log("npm");
+  opt.args.shift();
+  console.log(("npm install --save " + opt.args.join(" ")).cyan);
+  
   let npm = spawn(
-    "npm", ["install", "--save"].concat(opt.args)
+    "npm", ["install", "--save"].concat(opt.args),
+    {cwd: __dirname}
   );
   npm.stdout.on("data", data => {
-    console.log(data)
+    console.log(Buffer.from(data).toString());
   });
 
   npm.stderr.on('data', data => {
