@@ -32,16 +32,20 @@ const Installer = class {
     flags = flags.split(" ");
     let history = this.history;
     let modPath = path.join(PATH, name);
-    let mod;
+    let mod = {};
     
     if (existsSync(modPath)) {
-      mod = readFileSync(path.join(modPath, "package.json"));
-      mod = JSON.parse(mod);
+      let pkgPath = path.join(modPath, "package.json");
+      
+      if (existsSync(pkgPath)) {
+        mod = readFileSync(pkgPath);
+        mod = JSON.parse(mod);
+      }
     }
     else {
       console.error(
         "ERROR: ".red + name + " module is not available, please download to take it offline" + "!".red +
-        ("\nhint: download module >    $onpm download " + name).yellow
+        ("\nhint: download module >    onpm download " + name).yellow
       );
       process.exit();
     }
