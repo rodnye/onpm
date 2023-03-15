@@ -34,7 +34,6 @@ class Installer {
         this.loading = new LoadingTextBar(0);
         this.spinner = ora({
             spinner: {
-                interval: 20,
                 frames: ["\\", "-", "/"]
             },
             color: "yellow"
@@ -143,7 +142,7 @@ class Installer {
             green("\nInstalling ") + moduleName + " module..."
         );
         
-        if ("@".indexOf(moduleName) === 0) {
+        if (moduleName.indexOf("@") === 0) {
             // is a modules directory!
             let submoduleDir = path.join(toDir, "..");
             if (!fs.existsSync(submoduleDir)) fs.mkdirSync(submoduleDir);
@@ -164,7 +163,7 @@ class Installer {
        
         spinner.stop();
         console.log(
-            green.bold("=> ") + "The " + cyan.italic(moduleName) + " module has been successfully installed" + green.bold("!!\n")
+            green.bold("complete: ") + moduleName
         );
 
         //

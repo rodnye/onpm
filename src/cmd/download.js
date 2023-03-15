@@ -30,14 +30,15 @@ function exec (argv) {
         // use package.json dependencies
         const cwd = process.cwd();
         const pkg = new Json(path.join(cwd, "/package.json"))
+        console.log(pkg)
         
         if (pkg.error) {
             console.error(red.bold("fatal: ") + pkg.error);
             process.exit();
         }
         
-        let depList = Object.keys(pkg.dependencies || {});
-        let devDepList = Object.keys(pkg.devDependencies || {});
+        let depList = Object.keys(pkg.data.dependencies || {});
+        let devDepList = Object.keys(pkg.data.devDependencies || {});
         
         // add dependencies of package.json
         modulesNames = modulesNames.concat(depList);

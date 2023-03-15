@@ -2,7 +2,7 @@
  * create and update a loading bar in console 
  * [#######.....] 
  */
-const {green, red} = require("colors/safe");
+const {yellow} = require("colors/safe");
 
 class LoadingTextBar {
     constructor (speed) {
@@ -18,13 +18,12 @@ class LoadingTextBar {
     toString () {
         let bars = Math.floor(this.progress / 100 * 15);
 
-        let string = "[";
+        let string = "";
         for (let i = 0; i < 15; i++) {
-            if (i <= bars) string += green("#");
-            else string += red(".");
+            if (i <= bars) string += "#";
+            else string += ".";
         }
-        string += "]";
-        return string;
+        return "[" + yellow(string) + "]";
     }
 }
 

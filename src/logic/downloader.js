@@ -38,8 +38,8 @@ function downloadModule (moduleName) {
         });
         
         npm.on('close', code => {
-            console.log("\nchild process " + yellow("exited") + " with code " + code);
             spinner.stop();
+            console.log("\nchild process " + yellow("exited") + " with code " + code);
             response(code);
         });
     });

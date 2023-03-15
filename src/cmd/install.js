@@ -1,7 +1,7 @@
 // onpm i
 // onpm install
 const path = require("path");
-const { red, cyan } = require("colors/safe");
+const { yellow, green, red, cyan } = require("colors/safe");
 const config = require("../../config.js");
 
 const processArgs = require("../helpers/args.js");
@@ -34,8 +34,8 @@ function exec (argv) {
             process.exit();
         }
         
-        let depList = Object.keys(pkg.dependencies || {});
-        let devDepList = Object.keys(pkg.devDependencies || {});
+        let depList = Object.keys(pkg.data.dependencies || {});
+        let devDepList = Object.keys(pkg.data.devDependencies || {});
         
         // add dependencies of package.json
         modulesNames = modulesNames.concat(depList);
