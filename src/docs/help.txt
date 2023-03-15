@@ -1,0 +1,27 @@
+
+onpm <command>
+
+Usage:
+
+onpm download         cache all the dependencies defined in your project
+onpm download <foo>   cache the <foo> dependency
+onpm install          install all the dependencies in your project
+onpm install <foo>    add the <foo> dependency to project
+onpm -h               display general docs
+onpm <command> -h     quick help on <command>
+onpm -v               display onpm version
+onpm -l               display list of downloaded dependencies
+
+
+Commands:
+[d | download]
+[i | install]
+
+
+Options without commands:
+[-v | --version]
+[-l | --ls | --list]
+[-h | --help]
+
+To see the commands and their options in more detail, please use:
+onpm <command> -h

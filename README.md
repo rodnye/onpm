@@ -1,45 +1,40 @@
-# NPM Offline
-Instalador de modulos NPM sin conexión a internet.
+# npm offline
+NPM module installer without internet connection.
 
-## Instalar CLI
-Clone este repositorio, y luego utilice `npm link`:
+## Install CLI
+Clone the repository to a folder on your system with superuser permissions and then use `npm link`:
 ```shell
-git clone https://github.com/RodnyE/NPM-Offline
-cd ./NPM-Offline
+git clone https://github.com/RodnyE/NPM-Offline onpm
+cd ./onpm
+npm install
 npm link
 ```
 
-Con estos tres pasos ya npm-offline está listo para usar.  
-Pondrá a su disposición el comando `onpm`
+With these steps, npm-offline is ready to use.
+It will make available the `onpm` command
 
-## Uso de CLI
+## Using CLI
 ### `onpm download`
-"NPM Offline" no puede trabajar si no tiene modulos descargados.
-Descargue los que usted necesite utilizando `onpm download <module>`, por ejemplo:
+"NPM Offline" cannot work if you don't have modules downloaded.
+Download the ones you need using `onpm download <module>`, for example:
 ```shell
 onpm download express
 ```
-Luego de realizado este proceso, ya los modulos descargados estarán disponibles para instalarlos sin conexión cuantas veces quiera en otros proyectos.
+After completing this process, the downloaded modules will be available to 
+install them offline as many times as you want in other projects.
 
 
-### onpm install
-Similar al comando `npm install`, este es el comando para instalar los modulos en su proyecto de NodeJs, con la ligera diferencia que ya no será desde internet.  
-Su estructura es `onpm install <modules>`:
+### `onpm install`
+Similar to the `npm install` command, this is the command to install the modules in your NodeJs project, with the slight difference that it will no longer be from the internet.
+Its structure is `onpm install <modules>`:
 ```shell
-cd /MiProyecto
+cd /MyProject
 onpm install express
 ```
 
-Ejemplo si se quiere instalar los modulos `express` y `moment`:
+Example if you want to install the `express` and `moment` modules:
 ```shell
 onpm install --save express moment
 ```
 
-## Opciones (flags)
-| Flag | Descripción |
-|----  |----------- |
-| `--hide` o `--no-save` | Instalar modulos pero no indicarlos en el package.json |
-| `--save` | Guardar modulos como dependencias |
-| `--save-dev` | Guardar modulos como dependencias de desarrollador |
-| `--pkg` | Instalar dependencias a partir del package.json de la ruta |
-| `--pkg-dev` | Instalar dependencias de desarrollador a partir del package.json de la ruta |
+### For more information, execute `onpm -h`
