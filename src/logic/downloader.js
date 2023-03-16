@@ -1,6 +1,6 @@
 
 const chld = require("child_process");
-const {cyan, red, yellow} = require("colors/safe");
+const {cyan, green, red, yellow} = require("colors/safe");
 const ora = require("ora-classic");
 const config = require("../../config");
 
@@ -39,7 +39,10 @@ function downloadModule (moduleName) {
         
         npm.on('close', code => {
             spinner.stop();
-            console.log("\nchild process " + yellow("exited") + " with code " + code);
+            if (code === 0) {
+                console.log(green("complete: ") + moduleName + "\n");
+            }
+            else console.log(red("\nchild process exited with code " + code));
             response(code);
         });
     });

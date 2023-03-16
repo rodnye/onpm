@@ -78,14 +78,14 @@ class Installer {
         
         // add to modules copied
         const json = new Json(pkgDir).data || {};
-        this.modulesCopied[moduleName] = "^" + (json.version || options.version || "0.0.0");
+        modulesCopied[moduleName] = "^" + (json.version || options.version || "0.0.0");
         
         // copy module dependencies recursively 
         if (options.recursive && json.dependencies) {
             for (const depName in json.dependencies) {
                 const version = json.dependencies[depName];
                 onRecursive(depName);
-                this._copyModule(depName, {version});
+                this._copyModule(depName, {version, recursive: true});
             }
         }
         

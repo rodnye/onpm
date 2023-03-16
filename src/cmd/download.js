@@ -30,7 +30,7 @@ function exec (argv) {
         // use package.json dependencies
         const cwd = process.cwd();
         const pkg = new Json(path.join(cwd, "/package.json"))
-        console.log(pkg)
+        
         
         if (pkg.error) {
             console.error(red.bold("fatal: ") + pkg.error);
