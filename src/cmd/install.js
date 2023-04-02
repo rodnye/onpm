@@ -23,41 +23,43 @@ function exec (argv) {
     const cwd = process.cwd();
     const argsMap = processArgs(argv, flags);
     let modulesNames = argsMap.args.slice(1);
-
+    
+    
+    const installer = new Installer(cwd);
+    const pkg = installer.pkg;
+    
+    //
+    // install modules
+    //
+    console.log(cyan.bold("Starting..."));
+    
     if (!modulesNames[0]) {
         // no defined modules!
-        // get package.json dependencies
-        const pkg = new Json(path.join(cwd, "/package.json"))
+        // install all dependencies
         
         if (pkg.error) {
             console.error(red.bold("fatal: ") + pkg.error);
             process.exit();
         }
         
-        let depList = Object.keys(pkg.data.dependencies || {});
-        let devDepList = Object.keys(pkg.data.devDependencies || {});
-        
-        // add dependencies of package.json
-        modulesNames = modulesNames.concat(depList);
+        installer.installDependencies();
         
         if (!argsMap["--production"]) {
             // no production mode!
-            // add devDependencies of package.json
-            modulesNames = modulesNames.concat(devDepList);
+            installer.installDevDependencies();
         }
     }
     
-    
-    const installer = new Installer(cwd);
-    
-    let f = "--save";
-    if (argsMap["--no-save"]) f = "--no-save";
-    if (argsMap["--save-dev"]) f = "--save-dev";
-    
-    console.log(cyan.bold("Starting..."));
-    modulesNames.forEach(moduleName => {
-        installer.install(moduleName, f);
-    });
+    else {
+        // have modules to install
+        let f = "--save";
+        if (argsMap["--no-save"]) f = "--no-save";
+        if (argsMap["--save-dev"]) f = "--save-dev";
+        
+        modulesNames.forEach(moduleName => {
+            installer.install(moduleName, f);
+        });
+    }
     
     
     //
