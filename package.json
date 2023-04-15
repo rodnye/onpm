@@ -6,7 +6,7 @@
     "bin": "bin/onpm",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/RodnyE/NPM-Offline.git"
+        "url": "git+https://github.com/RodnyE/onpm.git"
     },
     "dependencies": {
         "colors": "^1.4.0",
