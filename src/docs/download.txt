@@ -1,14 +1,17 @@
+
 Download to cache the module(s) so you can install them offline whenever you need.
 
 Usage:
-"onpm download [<package-spec> ...]"
+onpm download [<package-spec> ...] [flags]
 
 onpm download         cache all the dependencies defined in your project
 onpm download <foo>   cache the <foo> dependency
 
+
 Options:
 [--prod | --production] :
-   "onpm download --production"
-   caches only necessary dependencies (ignores developer dependencies)
+onpm download --production
+Caches only necessary dependencies (ignores developer dependencies)
+   
    
 alias: d

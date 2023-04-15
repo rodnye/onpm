@@ -1,8 +1,8 @@
+
 Copy and install the dependencies from the cache to your project
 
-
 Usage:
-"onpm install [<package-spec> ...]"
+onpm install [<package-spec> ...] [flags]
 
 onpm install          install all the dependencies in your project
 onpm install <foo>    add the <foo> dependency to project
@@ -16,13 +16,14 @@ Options:
 --save-dev   installs and add to package.json devDependencies
 --no-save    installs but doesn't add them to package.json
 
-Ex: "onpm install --save <foo> <bar>"
-    install <foo> and <bar> dependencies and add them to package.json dependencies
+Ex: 
+$ onpm install --save <foo> <bar>
+this install <foo> and <bar> dependencies and add them to package.json dependencies
 
 
 [--prod | --production] :
-    "onpm install --prod"
-    Ignoring developer dependencies, installs all project dependencies.
+$ onpm install --prod
+Ignoring developer dependencies, installs all project dependencies.
 
 
 alias: i
