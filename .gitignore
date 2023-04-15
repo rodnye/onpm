@@ -1,5 +1,5 @@
 node_modules/
+package-lock.json
 .git/
-cache/
-cache/package.json
-cache/package-lock.json
+
+cache/**/*

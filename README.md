@@ -1,17 +1,12 @@
-# npm offline
+# offline npm manager
 NPM module installer without internet connection.
 
-## Install CLI
-Clone the repository to a folder on your system with superuser permissions and 
-then use `npm link`:
+## Setup
 ```sh
-git clone https://github.com/RodnyE/NPM-Offline onpm &&
-cd onpm &&
-npm install &&
-npm link
+npm i -g git+https://github.com/RodnyE/onpm.git
 ```
 
-With these steps, npm-offline is ready to use.
+onpm is ready to use.
 It will make available the `onpm` command
 
 ## CLI
