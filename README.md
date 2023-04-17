@@ -5,9 +5,13 @@ NPM module installer without internet connection.
 ```sh
 npm i -g git+https://github.com/RodnyE/onpm.git
 ```
-
 onpm is ready to use.
-It will make available the `onpm` command
+It will make available the `onpm` command.
+
+To check if everything went well, run:
+```sh
+onpm --version
+```
 
 ## CLI
 ### download
