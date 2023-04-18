@@ -6,7 +6,7 @@ const {red, yellow, green, cyan} = require("colors/safe");
 const LoadingTextBar = require("./loading.js");
 const Json = require("../helpers/json.js");
 const { copydirSync, isDirectory } = require("../helpers/fs.js");
-const { MODULES_DIR } = require("../../config.js");
+const { PKG_CACHE, MODULES_DIR } = require("../../config.js");
 
 
 /**
@@ -174,6 +174,24 @@ class Installer {
         flags = (flags || "").split(" ");
         const __hiddenConsole = this._cfg.hiddenConsole;
         
+        //
+        // get module name correct 
+        //
+        let nameSplit = moduleName.split("@");
+        let version;
+        
+        if (nameSplit[0]) {
+            // module@version
+            moduleName = nameSplit[0];
+            version = nameSplit[1];
+        }
+        else {
+            // @folder/module@version
+            moduleName = nameSplit[1];
+            version = nameSplit[2];
+        }
+        
+        
         if (!this._existsModule(moduleName)) {
            
             // oh no, module not stored!
@@ -189,10 +207,32 @@ class Installer {
         let moduleDir = path.join(MODULES_DIR, moduleName);
         let pkgDir = path.join(moduleDir, "/package.json");
         
+        let cachePkgMap = new Json(PKG_CACHE).data;
         let pkg = new Json(pkgDir);
         let pkgMap = pkg.data;
         
         
+        //
+        // get version correct
+        //
+        if (version) {
+            if (!isNaN(parseInt(version))) {
+                // version is a number!
+                // ex: ^1.0.0
+                version = "^" + version;
+            }
+            else {
+                // version is a uri!
+                // ex: github:user/repo
+            }
+        }
+        else {
+            // no version in module-name
+            version = 
+                cachePkgMap.dependencies[moduleName] ||
+                "^" + pkgMap.version;
+        }
+       
         
         //
         // copy or rewrite module
@@ -248,15 +288,15 @@ class Installer {
         //
         if (!flags.includes("--no-save")) {
             const projectPkg = this.pkg.data;
-            
+                
             if (flags.includes("--save") || flags.includes("-S")) {
                 if (!projectPkg.dependencies) projectPkg.dependencies = {};
-                projectPkg.dependencies[moduleName] = "^" + pkgMap.version;
+                projectPkg.dependencies[moduleName] = version;
                 Object.sort(projectPkg.dependencies);
             }
             if (flags.includes("--save-dev")) {
                 if (!projectPkg.devDependencies) projectPkg.devDependencies = {};
-                projectPkg.devDependencies[moduleName] = "^" + pkgMap.version;
+                projectPkg.devDependencies[moduleName] = version;
                 Object.sort(projectPkg.devDependencies);
             }
             this.pkg.save(2);
