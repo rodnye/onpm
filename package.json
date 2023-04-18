@@ -1,15 +1,15 @@
 {
-    "name": "onpm",
-    "version": "2.0.0",
-    "description": "offline npm manager",
-    "main": "src/main.js",
-    "bin": "bin/onpm",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/RodnyE/onpm.git"
-    },
-    "dependencies": {
-        "colors": "^1.4.0",
-        "ora-classic": "^5.4.2"
-    }
+  "name": "onpm",
+  "version": "2.0.3",
+  "description": "offline npm manager",
+  "main": "src/main.js",
+  "bin": "bin/onpm",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RodnyE/onpm.git"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "ora-classic": "^5.4.2"
+  }
 }

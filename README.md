@@ -3,7 +3,7 @@ NPM module installer without internet connection.
 
 ## Setup
 ```sh
-npm i -g git+https://github.com/RodnyE/onpm.git
+npm i -g onpm@github:RodnyE/onpm
 ```
 onpm is ready to use.
 It will make available the `onpm` command.
