@@ -187,7 +187,7 @@ class Installer {
         }
         else {
             // @folder/module@version
-            moduleName = nameSplit[1];
+            moduleName = "@" + nameSplit[1];
             version = nameSplit[2];
         }
         
