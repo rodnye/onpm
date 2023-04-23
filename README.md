@@ -34,6 +34,7 @@ Flags:
 | flag | desc |
 |-- |-- |
 | `--prod, --production` | Download only package.json dependencies |
+| `-f, --fast` | Download all modules quickly and directly in a single process |
 
 ### install
 ```sh

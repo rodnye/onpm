@@ -9,6 +9,11 @@ onpm download <foo>   cache the <foo> dependency
 
 
 Options:
+[-f | --fast] :
+onpm download [<package-spec> ...] --fast
+Download all modules quickly and directly in a single process.
+
+
 [--prod | --production] :
 onpm download --production
 Caches only necessary dependencies (ignores developer dependencies)

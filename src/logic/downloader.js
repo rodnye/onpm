@@ -4,6 +4,48 @@ const {cyan, green, red, yellow} = require("colors/safe");
 const ora = require("ora-classic");
 const config = require("../../config");
 
+
+/** 
+ * download all modules in a single process
+ */
+function downloadModules (modulesNames) {
+    return new Promise((response) => {
+        const spinner = ora({
+            color: "cyan",
+            text: "Downloading modules: " + modulesNames.join(", "),
+        });
+
+        spinner.start();
+
+        // execute npm command on cache folder
+        let npm = chld.spawn(
+            "npm", (["install", "--save"]).concat(modulesNames),
+            { cwd: config.CACHE }
+        );
+
+        npm.stdout.on("data", data => {
+            spinner.stop();
+            console.log(Buffer.from(data).toString());
+            spinner.start();
+        });
+
+        npm.stderr.on('data', data => {
+            spinner.stop();
+            console.error(red.bold("stderr: ") + data);
+            spinner.start();
+        });
+
+        npm.on('close', code => {
+            spinner.stop();
+            if(code === 0) {
+                console.log(green("complete: ") + "* " + modulesNames.join("\n* ") + "\n");
+            }
+            else console.log(red("\nchild process exited with code " + code));
+            response(code);
+        });
+    });
+}
+
 /** 
  * download and cache a module 
  * 
@@ -49,4 +91,7 @@ function downloadModule (moduleName) {
     
 }
 
-module.exports = downloadModule;
+module.exports = {
+    downloadModule, 
+    downloadModules,
+}

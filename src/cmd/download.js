@@ -6,12 +6,12 @@ const config = require("../../config.js");
 
 const processArgs = require("../helpers/args.js");
 const Json = require("../helpers/json.js");
-const downloadModule = require("../logic/downloader.js");
+const {downloadModule, downloadModules} = require("../logic/downloader.js");
 
 const cmds = ["download", "d"];
 const flags = [
-    "--prod",
-    "--production"
+    "-f", "--fast",
+    "--prod", "--production",
 ];
 
 
@@ -51,14 +51,23 @@ function exec (argv) {
         
     }
     
-    let promise = new Promise(response => response());
+    if (argsMap["-f"] || argsMap["--fast"]) {
+        //
+        // fast mode!
+        //
+        downloadModules(modulesNames);
+    }
     
-    // download each module
-    modulesNames.forEach(moduleName => {
-        promise = promise.then(exitCode => {
-            return downloadModule(moduleName);
+    else {
+        let promise = new Promise(response => response());
+    
+        // download each module
+        modulesNames.forEach(moduleName => {
+            promise = promise.then(exitCode => {
+                return downloadModule(moduleName);
+            });
         });
-    });
+    }
 }
 
 
