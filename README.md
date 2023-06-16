@@ -1,11 +1,11 @@
-# offline npm manager
+# Offline Npm Manager
 NPM module installer without internet connection.
 
 ## Setup
 ```sh
 npm i -g onpm@github:RodnyE/onpm
 ```
-onpm is ready to use.
+Now, onpm is ready to use.
 It will make available the `onpm` command.
 
 To check if everything went well, run:
@@ -61,3 +61,5 @@ Flags:
 | `--prod, --production` | installs only package.json dependencies |
 
 ### For more information, execute `onpm -h`
+
+## Code By RodnyE
