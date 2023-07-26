@@ -1,65 +1,87 @@
-# Offline Npm Manager
-NPM module installer without internet connection.
+# onpm
+
+Offline Npm Manager is a command line tool that allows you to install and manage NPM modules without an internet connection.
 
 ## Setup
-```sh
-npm i -g onpm@github:RodnyE/onpm
-```
-Now, onpm is ready to use.
-It will make available the `onpm` command.
 
-To check if everything went well, run:
+To install Offline Npm Manager, run the following command:
+
+```sh
+npm i -g onpm@github:rodnye/onpm
+```
+
+Once installed, you can use the `onpm` command.
+
+To verify the installation, run:
+
 ```sh
 onpm --version
 ```
 
 ## CLI
+
 ### download
+
+To use Offline Npm Manager, you need to download the required modules first. Use the following command:
+
 ```sh
 onpm download [<package-spec> ...] [flags]
 ```
-"NPM Offline" cannot work if you don't have modules downloaded.  
-  
+
+If no modules are specified, it will download the modules specified in the `package.json` file.
+
 For example:
+
 ```sh
 onpm download express
 ```
-After completing this process, the downloaded modules will be available to 
-install them offline as many times as you want in other projects.
-If you do not specify any modules, the ones specified in the `package.json` 
-will be downloaded to the cache.
 
+After downloading the modules, they will be available for offline installation in other projects.
 
 Flags:
-| flag | desc |
-|-- |-- |
-| `--prod, --production` | Download only package.json dependencies |
-| `-f, --fast` | Download all modules quickly and directly in a single process |
+
+| Flag                      | Description                                           |
+|---------------------------|-------------------------------------------------------|
+| `--prod, --production`    | Download only package.json dependencies               |
+| `-f, --fast`              | Download all modules quickly in a single process      |
 
 ### install
+
+To install the downloaded modules in your NodeJs project, use the following command:
+
 ```sh
 onpm install [<package-spec> ...] [flags]
 ```
-Similar to the `npm install` command, this is the command to install the 
-modules in your NodeJs project, with the slight difference that it will 
-no longer be from the internet.
-If you do not specify any modules, the ones specified in the `package.json` 
-will be installed.
 
+If no modules are specified, it will install the modules specified in the `package.json` file.
 
-Example if you want to install the `express` and `moment` modules:
+For example, to install the `express` and `moment` modules:
+
 ```sh
 onpm install express moment --save
 ```
 
 Flags:
-| flag | desc |
-|-- |-- |
-| `-S, --save` | installs and add to package.json dependencies    |
-| `--save-dev` | installs and add to package.json devDependencies |
-| `--no-save`  | installs but doesn't add them to package.json    |
-| `--prod, --production` | installs only package.json dependencies |
+
+| Flag                 | Description                                           |
+|----------------------|-------------------------------------------------------|
+| `-S, --save`         | Install and add to package.json dependencies          |
+| `--save-dev`         | Install and add to package.json devDependencies       |
+| `--no-save`          | Install without adding to package.json                |
+| `--prod, --production`| Install only package.json dependencies                |
 
 ### For more information, execute `onpm -h`
 
-## Code By RodnyE
+## Contributions
+
+Contributions are welcome! If you encou
+nter any issues or have improvements in
+mind, feel free to open a new issue or s
+ubmit a pull request.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+##
+Created by Rodny Estrada.
