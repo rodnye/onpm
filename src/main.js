@@ -22,7 +22,6 @@ if (!fs.existsSync(cfg.HOME)) {
 const argv = process.argv;
 const argsMap = processArgs(argv, [], {ignoreFlagsError: true});
 const arg0 = argsMap.arg0;
-console.log(argsMap)
 
 const cmds = [
     require("./cmd/download"),

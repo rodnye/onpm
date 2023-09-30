@@ -1,6 +1,6 @@
 {
   "name": "onpm",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "offline npm manager",
   "main": "src/main.js",
   "bin": "bin/onpm",
