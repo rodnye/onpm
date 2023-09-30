@@ -2,13 +2,13 @@
 const chld = require("child_process");
 const {cyan, green, red, yellow} = require("colors/safe");
 const ora = require("ora-classic");
-const config = require("../../config");
+const cfg = require("../../config");
 
 
 /** 
  * download all modules in a single process
  */
-function downloadModules (modulesNames) {
+function downloadModulesGroup (modulesNames) {
     return new Promise((response) => {
         const spinner = ora({
             color: "cyan",
@@ -20,7 +20,7 @@ function downloadModules (modulesNames) {
         // execute npm command on cache folder
         let npm = chld.spawn(
             "npm", (["install", "--save"]).concat(modulesNames),
-            { cwd: config.CACHE }
+            { cwd: cfg.HOME }
         );
 
         npm.stdout.on("data", data => {
@@ -64,7 +64,7 @@ function downloadModule (moduleName) {
         // execute npm command on cache folder
         let npm = chld.spawn(
             "npm", ["install", "--save", moduleName],
-            {cwd: config.CACHE}
+            {cwd: cfg.HOME}
         );
     
         npm.stdout.on("data", data => {
@@ -93,5 +93,5 @@ function downloadModule (moduleName) {
 
 module.exports = {
     downloadModule, 
-    downloadModules,
+    downloadModulesGroup,
 }

@@ -1,12 +1,11 @@
-// onpm download
-// onpm d
-const path = require("path");
-const {red} = require("colors/safe");
-const config = require("../../config.js");
 
-const processArgs = require("../helpers/args.js");
-const Json = require("../helpers/json.js");
-const {downloadModule, downloadModules} = require("../logic/downloader.js");
+// Command file
+// `onpm download`
+
+const processArgs = require("../helpers/args");
+const Json = require("../helpers/json");
+const {red} = require("colors/safe");
+const {downloadModule, downloadModulesGroup} = require("../logic/downloader");
 
 const cmds = ["download", "d"];
 const flags = [
@@ -15,37 +14,33 @@ const flags = [
 ];
 
 
-
-
-/**
- * exec the command
- */
+// Execute the command
 function exec (argv) {
-    const argsMap = processArgs(argv, flags);
+    const argsMap = processArgs(argv, flags, {});
     let modulesNames = argsMap.args.slice(1);
     
     
     if (!modulesNames[0]) {
-        // no defined modules!
-        // use package.json dependencies
+        // No defined modules in prompt !!
+        // Use package.json dependencies
         const cwd = process.cwd();
-        const pkg = new Json(path.join(cwd, "/package.json"))
+        const pkg = new Json(cwd + "/package.json");
         
-        
+        // Syntax error or not found
         if (pkg.error) {
             console.error(red.bold("fatal: ") + pkg.error);
-            process.exit();
+            return process.exit();
         }
         
-        let depList = Object.keys(pkg.data.dependencies || {});
-        let devDepList = Object.keys(pkg.data.devDependencies || {});
+        let depList = Object.keys(pkg.data.dependencies || []);
+        let devDepList = Object.keys(pkg.data.devDependencies || []);
         
-        // add dependencies of package.json
+        // Add dependencies of package.json
         modulesNames = modulesNames.concat(depList);
         
         if (!argsMap["--production"] || !argsMap["--prod"]) {
-            // no production mode!
-            // add devDependencies of package.json
+            // No production mode!
+            // Add devDependencies of package.json
             modulesNames = modulesNames.concat(devDepList);
         }
         
@@ -55,7 +50,7 @@ function exec (argv) {
         //
         // fast mode!
         //
-        downloadModules(modulesNames);
+        downloadModulesGroup(modulesNames);
     }
     
     else {
@@ -75,5 +70,5 @@ module.exports = {
     cmds,
     flags,
     exec,
-    helpDir: path.join(config.DOCS, "/download.txt"),
+    helpDir: require("../../config").DOCS + "/download.txt",
 };

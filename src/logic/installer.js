@@ -1,33 +1,37 @@
+
+const { copydirSync, isDirectory } = require("../helpers/fs");
+const {red, yellow, green, cyan} = require("colors/safe");
+
 const fs = require("fs");
 const path = require("path");
 const ora = require("ora-classic");
-const {red, yellow, green, cyan} = require("colors/safe");
 
-const LoadingTextBar = require("./loading.js");
-const Json = require("../helpers/json.js");
-const { copydirSync, isDirectory } = require("../helpers/fs.js");
-const { PKG_CACHE, MODULES_DIR } = require("../../config.js");
+const LoadingTextBar = require("./loading");
+const Json = require("../helpers/json");
+const parseModuleName = require("../helpers/module-name-parser");
+const cfg = require("../../config");
 
+const homeModulesDir = cfg.HOME + "/node_modules"
 
 /**
  * Manager to copy modules from one directory to another 
  * 
- * @param {string} dir to project
- * @param cfg.hiddenConsole {boolean} show or remove console log
+ * @param {string} projectDir - project folder
+ * @param {boolean} options.hiddenConsole - show or remove console log
  */
 class Installer {
    
-    constructor (projectDir, cfg) {
-        const modulesDir = path.join(projectDir, "/node_modules");
-        const packageDir = path.join(projectDir, "/package.json");
+    constructor (projectDir, options) {
+        const modulesDir = projectDir + "/node_modules";
+        const packageDir = projectDir + "/package.json";
         
         if (!fs.existsSync(modulesDir)) fs.mkdirSync(modulesDir);
         if (!fs.existsSync(packageDir)) fs.writeFileSync(packageDir, "{}", "utf-8");
         
-        this._cfg = cfg || {};
+        this._options = options || {};
         this.dir = projectDir;
         this.modulesDir = modulesDir;
-        this.pkg = new Json(path.join(projectDir, "package.json"));
+        this.pkg = new Json(packageDir);
         
         this.installed = {};
         this.modulesCopied = {};
@@ -48,55 +52,66 @@ class Installer {
     }
     
     /**
-     * exists module 
+     * Exists module 
      */
     _existsModule (moduleName) {
-        const moduleDir = path.join(MODULES_DIR, moduleName);
+        const moduleDir = homeModulesDir + "/" + moduleName;
         return fs.existsSync(moduleDir);
     }
     
      
     /** 
-     * copy module 
+     * Copy module 
      * 
-     * @param {string} module name to copy 
-     * @param options.version {string} version of the module
-     * @param options.recursive {boolean} copy others modules dependencies 
+     * @param {string} moduleName - name to copy 
+     * @param {string} options.version - set version of the module
+     * @param {boolean} options.recursive - enable copy others modules dependencies
+     * @param {boolean} options.notBin - disable copy binaries (node executables)
+     * @param {boolean} options.handleRecursive - handler copy step of others modules dependencies
      * 
-     * @retun {boolean} if copied successful or not
+     * @return {boolean} if copied successful or not
      */
     _copyModule (moduleName, options = {}) {
         const modulesCopied = this.modulesCopied;
-        const onRecursive = options.onRecursive || function(){};
+        const handleRecursive = options.handleRecursive || function(){};
         
-        // stop if is copied
+        // Stop if already exists
         if (modulesCopied[moduleName]) return false;
         
-        const fromDir = path.join(MODULES_DIR, moduleName);
-        const toDir = path.join(this.modulesDir, moduleName);
-        const pkgDir = path.join(fromDir, "package.json");
+        const fromDir = homeModulesDir + "/" + moduleName;
+        const toDir = this.modulesDir + "/" + moduleName;
+        const pkgDir = fromDir + "/package.json";
         
+        //
+        // Start copy module
+        //
         copydirSync(fromDir, toDir);
         
-        // add to modules copied
-        const json = new Json(pkgDir).data || {};
-        modulesCopied[moduleName] = "^" + (json.version || options.version || "0.0.0");
+        // Add to modules copied to remember in recursion
+        const jsonData = new Json(pkgDir).data;
+        modulesCopied[moduleName] = "^" + (jsonData.version || options.version || "0.0.0");
         
-        // if have binary files
-        if (!options.notBin && json.bin) {
-            const binariesDir = path.join(this.modulesDir, "/.bin");
+        //
+        // Copy binary files
+        //
+        if (!options.notBin && jsonData.bin) {
+            const binariesDir = this.modulesDir + "/.bin";
             const binaries = {};
             
             if (!fs.existsSync(binariesDir)) fs.mkdirSync(binariesDir);
         
-            if (typeof json.bin == "string") {
-                const binName = json.name.split("/").pop();
-                binaries[binName] = json.bin;
+            if (typeof(jsonData.bin) === "string") {
+                // Is binary path !
+                const binName = jsonData.name.split("/").pop();
+                binaries[binName] = jsonData.bin;
             }
-            else Object.assign(binaries, json.bin);
+            else {
+                // Is binary path collection ! 
+                Object.assign(binaries, jsonData.bin);
+            }
             
+            // Start copy of binaries
             for (let binName in binaries) {
-                
                 const binDir = path.join(fromDir, binaries[binName]);
                 const toBinDir = path.join(binariesDir, binName);
                 
@@ -104,9 +119,10 @@ class Installer {
             }
         }
         
-        // copy module dependencies of node_modules 
-        const nodeModulesDir = path.join(fromDir, "/node_modules");
-        
+        //
+        // Copy dependencies for INUSUAL nested node_modules folders
+        //
+        const nodeModulesDir = fromDir + "/node_modules";
         if (fs.existsSync(nodeModulesDir)) {
             const depList = fs.readdirSync(nodeModulesDir);
             for (let depName of depList) {
@@ -114,27 +130,30 @@ class Installer {
                 if (isDirectory(dir)) {
                     const installer = new Installer(dir, {hiddenConsole: true});
                     installer.modulesDir = this.modulesDir;
-                    installer.modulesCopied = Object.assign({}, this.modulesCopied);
-                    installer.modulesInstalled = Object.assign({}, this.modulesInstalled);
+                    installer.modulesCopied = this.modulesCopied;
+                    installer.modulesInstalled = this.modulesInstalled;
                     installer.installDependencies();
                 }
             }
         }
         
-        // copy module dependencies recursively 
-        if (options.recursive && json.dependencies) {
-            for (const depName in json.dependencies) {
-                const version = json.dependencies[depName];
-                onRecursive(depName);
+        //
+        // Copy module dependencies recursively
+        // 
+        if (options.recursive && jsonData.dependencies) {
+            for (const depName in jsonData.dependencies) {
+                const version = jsonData.dependencies[depName];
+                handleRecursive(depName);
                 this._copyModule(depName, {version, recursive: true});
             }
         }
         
+        // Success!
         return true;
     }
     
     /**
-     * install all dependencies 
+     * Install all dependencies
      */
     installAll () {
         this.installDependencies();
@@ -142,7 +161,7 @@ class Installer {
     }
     
     /**
-     * install dependencies from package.json
+     * Install dependencies from package.json
      */
     installDependencies () {
         const depList = Object.keys(this.pkg.data.dependencies || {});
@@ -153,7 +172,7 @@ class Installer {
     }
     
     /**
-     * install dev dependencies from package.json
+     * Install dev dependencies from package.json
      */
     installDevDependencies () {
         const depList = Object.keys(this.pkg.data.devDependencies || {});
@@ -166,87 +185,60 @@ class Installer {
     /**
      * copy module to node_modules of project 
      * 
-     * @param {string} module name to install 
-     * @param {string} a string with options 
+     * @param {string} moduleName - name to install 
+     * @param {string} flags - string with options 
      */
     install (moduleName, flags) {
-        
         flags = (flags || "").split(" ");
-        const __hiddenConsole = this._cfg.hiddenConsole;
+        const _hiddenConsole = this._options.hiddenConsole;
         
         //
-        // get module name correct 
+        // Get correct module name correct 
         //
-        let nameSplit = moduleName.split("@");
-        let version;
-        
-        if (nameSplit[0]) {
-            // module@version
-            moduleName = nameSplit[0];
-            version = nameSplit[1];
-        }
-        else {
-            // @folder/module@version
-            moduleName = "@" + nameSplit[1];
-            version = nameSplit[2];
-        }
-        
+        const moduleNotation = parseModuleName(moduleName);
+        let version = moduleNotation.version;
+            moduleName = moduleNotation.name;
+
         
         if (!this._existsModule(moduleName)) {
            
-            // oh no, module not stored!
+            // Oh no, module not cached!
             console.error(
                 red("ERROR: ") + moduleName + " module is not available, please download to take it offline" + red("!") +
                 yellow("\nhint: Use \"onpm download " + moduleName + "\" and retry again...")
             );
-            process.exit();
-            
+            return process.exit();
         }
         
         
-        let moduleDir = path.join(MODULES_DIR, moduleName);
-        let pkgDir = path.join(moduleDir, "/package.json");
+        let moduleDir = homeModulesDir + moduleName;
+        let pkgDir = moduleDir + "/package.json";
         
-        let cachePkgMap = new Json(PKG_CACHE).data;
         let pkg = new Json(pkgDir);
-        let pkgMap = pkg.data;
+        let pkgData = pkg.data;
+        let cachePkgData = new Json(cfg.HOME + "/package.json").data;
         
-        
-        //
-        // get version correct
-        //
-        if (version) {
-            if (!isNaN(parseInt(version))) {
-                // version is a number!
-                // ex: ^1.0.0
-                version = "^" + version;
-            }
-            else {
-                // version is a uri!
-                // ex: github:user/repo
-            }
-        }
-        else {
-            // no version in module-name
+        // No version in module-name
+        if (!version) {
             version = 
-                cachePkgMap.dependencies[moduleName] ||
-                "^" + pkgMap.version;
+                cachePkgData.dependencies[moduleName] ||
+                "^" + pkgData.version;
         }
        
         
         //
-        // copy or rewrite module
+        // Copy or rewrite module
         //
         let fromDir = moduleDir;
-        let toDir = path.join(this.modulesDir, moduleName);
+        let toDir = this.modulesDir + "/" + moduleName;
         
         
         // progress bar
         const loading = this.loading;
         const spinner = this.spinner;
         
-        if (!__hiddenConsole) {
-            const depLength = 1 + Object.keys(pkgMap.dependencies || {}).length;
+        if (!_hiddenConsole) {
+            const depLength = 1 + Object.keys(pkgData.dependencies || {}).length;
             loading.progress = 0;
             loading.speed = 100 / depLength;
             spinner.text = cyan("install") + " " + moduleName + " module.";
@@ -258,25 +250,26 @@ class Installer {
         }
         
         if (moduleName.indexOf("@") === 0) {
-            // is a modules directory!
+            // Is a modules directory!
             let submoduleDir = path.join(toDir, "..");
             if (!fs.existsSync(submoduleDir)) fs.mkdirSync(submoduleDir);
         }
         
-        // copy files
+        //
+        // Start Copy Files
+        //
         this._copyModule(moduleName, {
             recursive: true,
-            onRecursive: __hiddenConsole ? null : name => {
-                loading.update();
-                //console.log("copy " + name)
+            handleRecursive: _hiddenConsole ? null : name => {
+                loading.update(); 
                 spinner.prefixText = loading.toString();
                 spinner.text = yellow("copy ") + name + " submodule.";
                 spinner.render();
             }
         });
-        this.modulesInstalled[moduleName] = pkgMap.version;
+        this.modulesInstalled[moduleName] = pkgData.version;
         
-        if (!__hiddenConsole) {
+        if (!_hiddenConsole) {
             spinner.stop();
             console.log(
                 green.bold("complete: ") + moduleName
@@ -284,7 +277,7 @@ class Installer {
         }
 
         //
-        // update package.json 
+        // Update package.json 
         //
         if (!flags.includes("--no-save")) {
             const projectPkg = this.pkg.data;

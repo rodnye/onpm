@@ -1,12 +1,13 @@
-// onpm i
-// onpm install
-const path = require("path");
-const { yellow, green, red, cyan } = require("colors/safe");
-const config = require("../../config.js");
 
-const processArgs = require("../helpers/args.js");
-const Json = require("../helpers/json.js");
-const Installer = require("../logic/installer.js");
+// Command file
+// `onpm install`
+
+const cfg = require("../../config");
+const { yellow, green, red, cyan } = require("colors/safe");
+
+const processArgs = require("../helpers/args"); 
+const Installer = require("../logic/installer");
+
 
 const cmds = ["install", "i"];
 const flags = [
@@ -29,13 +30,13 @@ function exec (argv) {
     const pkg = installer.pkg;
     
     //
-    // install modules
+    // Install modules
     //
     console.log(cyan.bold("Starting..."));
     
     if (!modulesNames[0]) {
-        // no defined modules!
-        // install all dependencies
+        // No defined modules!
+        // Install all dependencies
         
         if (pkg.error) {
             console.error(red.bold("fatal: ") + pkg.error);
@@ -44,14 +45,14 @@ function exec (argv) {
         
         installer.installDependencies();
         
-        if (!argsMap["--production"]) {
+        if (!argsMap["--production"] || !argsMap["--prod"]) {
             // no production mode!
             installer.installDevDependencies();
         }
     }
     
     else {
-        // have modules to install
+        // Have defined modules to install
         let f = "--save";
         if (argsMap["--no-save"]) f = "--no-save";
         if (argsMap["--save-dev"]) f = "--save-dev";
@@ -63,7 +64,7 @@ function exec (argv) {
     
     
     //
-    // show results
+    // Print end results
     //
     let installed = installer.modulesInstalled;
     let copied = installer.modulesCopied;
@@ -83,5 +84,5 @@ module.exports = {
     cmds,
     flags,
     exec,
-    helpDir: path.join(config.DOCS, "/install.txt"),
+    helpDir: cfg.DOCS + "/install.txt",
 };

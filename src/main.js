@@ -1,22 +1,33 @@
 
-const path = require("path");
+const cfg = require("../config");
 const fs = require("fs");
-
 const processArgs = require("./helpers/args.js");
-const Installer = require("./logic/installer.js");
 
-//
-// Arguments 
-//
+
+// Verify exists cached folder
+if (!fs.existsSync(cfg.HOME)) {
+    // Create cached module folder
+    fs.mkdirSync(cfg.HOME);
+    fs.writeFileSync(cfg.HOME + "/README.md", "This directory is for storing downloaded modules so that ONPM can use and copy them.");
+    fs.writeFileSync(cfg.HOME + "/package.json", JSON.stringify({
+        "name": "onpm-modules-cache",
+        "version": "1.0.0",
+        "dependencies": {}
+      }, null, 2)
+    );
+}
+
+
+// Get command arguments 
 const argv = process.argv;
 const argsMap = processArgs(argv, [], {ignoreFlagsError: true});
 const arg0 = argsMap.arg0;
-
+console.log(argsMap)
 
 const cmds = [
-    require("./cmd/download.js"),
-    require("./cmd/install.js"),
-    require("./cmd/no-cmd.js"),
+    require("./cmd/download"),
+    require("./cmd/install"),
+    require("./cmd/no-cmd"),
 ];
 
 
