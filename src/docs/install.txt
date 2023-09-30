@@ -10,7 +10,11 @@ onpm install <foo>    add the <foo> dependency to project
 
 
 Options:
-[-S | --save | --save-dev | --no-save] :
+[
+    -S | --save
+    -D | --save-dev
+    -N | --no-save
+] :
 
 --save       installs and add to package.json dependencies
 --save-dev   installs and add to package.json devDependencies

@@ -11,12 +11,11 @@ const Installer = require("../logic/installer");
 
 const cmds = ["install", "i"];
 const flags = [
-    "--help", "-h",
-    "--save", "-S",
-    "--save-dev",
-    "--no-save",
-    
-    "--production",
+    "-h", "--help",
+    "-S", "--save", 
+    "-D", "--save-dev",
+    "-N", "--no-save", 
+    "--prod", "--production",
 ];
 
 
@@ -54,8 +53,8 @@ function exec (argv) {
     else {
         // Have defined modules to install
         let f = "--save";
-        if (argsMap["--no-save"]) f = "--no-save";
-        if (argsMap["--save-dev"]) f = "--save-dev";
+        if (argsMap["--no-save"] || argsMap["-N"]) f = "--no-save";
+        if (argsMap["--save-dev"] || argsMap["-D"]) f = "--save-dev";
         
         modulesNames.forEach(moduleName => {
             installer.install(moduleName, f);

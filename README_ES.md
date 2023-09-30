@@ -66,8 +66,8 @@ Flags:
 | Flag                 | Descripción                                           |
 |----------------------|-------------------------------------------------------|
 | `-S, --save`         | Instalar y agregar a las dependencias del package.json |
-| `--save-dev`         | Instalar y agregar a las devDependencies del package.json |
-| `--no-save`          | Instalar sin agregar a package.json                   |
+| `-D, --save-dev`         | Instalar y agregar a las devDependencies del package.json |
+| `-N, --no-save`          | Instalar sin agregar a package.json                   |
 | `--prod, --production`| Instalar solo dependencias de package.json             |
 
 ### Para obtener más información, ejecuta `onpm -h`
