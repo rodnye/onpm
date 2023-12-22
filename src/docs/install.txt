@@ -11,7 +11,7 @@ onpm install <foo>    add the <foo> dependency to project
 
 Options:
 [
-    -S | --save
+    -S | --save | --save-prod
     -D | --save-dev
     -N | --no-save
 ] :
@@ -25,9 +25,7 @@ $ onpm install --save <foo> <bar>
 this install <foo> and <bar> dependencies and add them to package.json dependencies
 
 
-[--prod | --production] :
-$ onpm install --prod
-Ignoring developer dependencies, installs all project dependencies.
-
+$ onpm install [--save | --save-dev]
+if no modules are specified, it will install the modules specified in the `package.json` file.
 
 alias: i

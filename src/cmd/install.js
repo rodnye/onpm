@@ -12,10 +12,9 @@ const Installer = require("../logic/installer");
 const cmds = ["install", "i"];
 const flags = [
     "-h", "--help",
-    "-S", "--save", 
+    "-S", "--save", "--save-prod", 
     "-D", "--save-dev",
     "-N", "--no-save", 
-    "--prod", "--production",
 ];
 
 
@@ -31,6 +30,9 @@ function exec (argv) {
     //
     // Install modules
     //
+    let saveProd = argsMap["-S"] || argsMap["--save"] || argsMap["--save-prod"];
+    let saveDev = argsMap["-D"] || argsMap["--save-dev"];
+    let saveAll = !saveProd && !saveDev;
     
     if (!modulesNames[0]) {
         // No defined modules!
@@ -41,19 +43,15 @@ function exec (argv) {
             process.exit();
         }
         
-        installer.installAllFrom("dependencies");
-        
-        if (!argsMap["--production"] || !argsMap["--prod"]) {
-            // no production mode!
-            installer.installAllFrom("devDependencies")
-        }
+        if (saveAll || saveProd) installer.installAllFrom("dependencies"); 
+        if (saveAll || saveDev) installer.installAllFrom("devDependencies");
     }
     
     else {
         // Have defined modules to install
         let saveAs = "dependencies"
-        if (argsMap["--no-save"] || argsMap["-N"]) saveAs = null;
-        if (argsMap["--save-dev"] || argsMap["-D"]) saveAs = "devDependencies";
+        if (saveDev) saveAs = "devDependencies";
+        if (argsMap["-N"] || argsMap["--no-save"]) saveAs = null;
         
         modulesNames.forEach(moduleName => {
             installer.install(moduleName, {saveAs});
