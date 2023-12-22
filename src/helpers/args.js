@@ -6,7 +6,7 @@ const {red, yellow} = require("colors/safe");
  *
  * @param {process.argv} _argv
  * @param {string[]} availableFlags
- * @param {boolean} option.ignoreFlagsError - ignore Flags Error
+ * @param {boolean} options.ignoreFlagsError - ignore Flags Error
  */
 function processArgs (argv, availableFlags, options = {}) {
     

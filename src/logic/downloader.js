@@ -7,6 +7,9 @@ const cfg = require("../../config");
 
 /** 
  * download all modules in a single process
+ * 
+ * @param {string[]} modulesNames - modules names list to install
+ * @return {Promise}
  */
 function downloadModulesGroup (modulesNames) {
     return new Promise((response) => {
@@ -19,7 +22,7 @@ function downloadModulesGroup (modulesNames) {
 
         // execute npm command on cache folder
         let npm = chld.spawn(
-            "npm", (["install", "--save"]).concat(modulesNames),
+            "npm", (["install", "--save", "--ignore-scripts"]).concat(modulesNames),
             { cwd: cfg.HOME }
         );
 
@@ -49,7 +52,7 @@ function downloadModulesGroup (modulesNames) {
 /** 
  * download and cache a module 
  * 
- * @param {string} module name
+ * @param {string} moduleName - name
  * @return {Promise}
  */
 function downloadModule (moduleName) {
@@ -63,8 +66,8 @@ function downloadModule (moduleName) {
         
         // execute npm command on cache folder
         let npm = chld.spawn(
-            "npm", ["install", "--save", moduleName],
-            {cwd: cfg.HOME}
+            "npm", ["install", "--save", "--ignore-scripts", moduleName],
+            { cwd: cfg.HOME }
         );
     
         npm.stdout.on("data", data => {

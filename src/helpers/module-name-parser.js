@@ -12,12 +12,12 @@ function parseModuleName (input) {
     let version;
         
     if (nameSplit[0]) {
-        // Syntax `module@version`
+        // For syntax `module@version`...
         name = nameSplit[0];
         version = nameSplit[1];
     }
     else {
-        // Syntax `@folder/module@version`
+        // For syntax `@folder/module@version`
         name = "@" + nameSplit[1];
         version = nameSplit[2];
     }

@@ -3,7 +3,7 @@
 // `onpm install`
 
 const cfg = require("../../config");
-const { yellow, green, red, cyan } = require("colors/safe");
+const { green, red, cyan } = require("colors/safe");
 
 const processArgs = require("../helpers/args"); 
 const Installer = require("../logic/installer");
@@ -31,7 +31,6 @@ function exec (argv) {
     //
     // Install modules
     //
-    console.log(cyan.bold("Starting..."));
     
     if (!modulesNames[0]) {
         // No defined modules!
@@ -42,22 +41,22 @@ function exec (argv) {
             process.exit();
         }
         
-        installer.installDependencies();
+        installer.installAllFrom("dependencies");
         
         if (!argsMap["--production"] || !argsMap["--prod"]) {
             // no production mode!
-            installer.installDevDependencies();
+            installer.installAllFrom("devDependencies")
         }
     }
     
     else {
         // Have defined modules to install
-        let f = "--save";
-        if (argsMap["--no-save"] || argsMap["-N"]) f = "--no-save";
-        if (argsMap["--save-dev"] || argsMap["-D"]) f = "--save-dev";
+        let saveAs = "dependencies"
+        if (argsMap["--no-save"] || argsMap["-N"]) saveAs = null;
+        if (argsMap["--save-dev"] || argsMap["-D"]) saveAs = "devDependencies";
         
         modulesNames.forEach(moduleName => {
-            installer.install(moduleName, f);
+            installer.install(moduleName, {saveAs});
         });
     }
     
@@ -69,13 +68,15 @@ function exec (argv) {
     let copied = installer.modulesCopied;
    
     console.log(
-        "\n  Installed " + green(Object.keys(installed).length + "") + " dependencies with " +
-        green(Object.keys(copied).length+"") + " modules."
+        "\n  Installed " + green.bold(Object.keys(installed).length + "") + " dependencies with " +
+        green.bold(Object.keys(copied).length+"") + " modules."
     );
     for (let moduleName in installed) {
         let version = installed[moduleName];
-        console.log(yellow("|- ") + moduleName + "@" + version);
+        console.log(cyan.bold("|- ") + moduleName + "@" + version);
     }
+    
+    console.log("");
 }
 
 
