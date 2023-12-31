@@ -22,7 +22,7 @@ function downloadModulesGroup (modulesNames) {
 
         // execute npm command on cache folder
         let npm = chld.spawn(
-            "npm", (["install", "--save", "--ignore-scripts"]).concat(modulesNames),
+            "npm", (["install", "--save", "--ignore-scripts", "--force"]).concat(modulesNames),
             { cwd: cfg.HOME }
         );
 
@@ -66,7 +66,7 @@ function downloadModule (moduleName) {
         
         // execute npm command on cache folder
         let npm = chld.spawn(
-            "npm", ["install", "--save", "--ignore-scripts", moduleName],
+            "npm", ["install", "--save", "--ignore-scripts", "--force", moduleName],
             { cwd: cfg.HOME }
         );
     
