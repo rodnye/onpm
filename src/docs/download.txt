@@ -9,10 +9,13 @@ onpm download <foo>   cache the <foo> dependency
 
 
 Options:
-[-f | --fast] :
+[--fast] :
 onpm download [<package-spec> ...] --fast
 Download all modules quickly and directly in a single process.
 
+[-f | --force] :
+onpm download [<package-spec> ...] --force
+Download all modules ignoring if already downloaded.
 
 [--prod | --production] :
 onpm download --production

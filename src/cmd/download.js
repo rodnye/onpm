@@ -2,14 +2,16 @@
 // Command file
 // `onpm download`
 
+const { HOME } = require("../../config.js");
 const processArgs = require("../helpers/args");
 const Json = require("../helpers/json");
-const {red} = require("colors/safe");
+const {red, cyan} = require("colors/safe");
 const {downloadModule, downloadModulesGroup} = require("../logic/downloader");
 
 const cmds = ["download", "d"];
 const flags = [
-    "-f", "--fast",
+    "--fast",
+    "-f", "--force",
     "--prod", "--production",
 ];
 
@@ -46,7 +48,31 @@ function exec (argv) {
         
     }
     
-    if (argsMap["-f"] || argsMap["--fast"]) {
+    // Exclude modules if exists
+    let ignoredModules = [];
+    if (!args["-f"] && !argsMap["--force"]) {
+        let downloadedModules = new Json(HOME + "/package.json");
+        downloadedModules = Object.keys(downloadedModules.data.dependencies);
+        
+        // Remove of already downloaded
+        modulesNames = modulesNames.filter((item) => {
+            if (downloadedModules.includes(item)) {
+                ignoredModules.push(item);
+                return false;
+            }
+        });
+    }
+    
+    // Show ignored modules 
+    if (ignoredModules.length) {
+        console.log(
+            cyan("Already downloaded dependencies:") I 
+          + cyan("\n * ") + ignoredModules.join(cyan("\n * ")) 
+          + "\n\n"
+        );
+    }
+    
+    if (argsMap["--fast"]) {
         //
         // fast mode!
         //

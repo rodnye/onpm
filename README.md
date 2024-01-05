@@ -43,7 +43,8 @@ Flags:
 | Flag                      | Description                                           |
 |---------------------------|-------------------------------------------------------|
 | `--prod, --production`    | Download only package.json dependencies               |
-| `-f, --fast`              | Download all modules quickly in a single process      |
+| `-f`, `--force`           | Download all modules ignoring if already downloaded   |
+| `--fast`                  | Download all modules quickly in a single process      |
 
 ### install
 
