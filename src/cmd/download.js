@@ -66,7 +66,7 @@ function exec (argv) {
     // Show ignored modules 
     if (ignoredModules.length) {
         console.log(
-            cyan("Already downloaded dependencies:") I 
+            cyan("Already downloaded dependencies:") 
           + cyan("\n * ") + ignoredModules.join(cyan("\n * ")) 
           + "\n\n"
         );
