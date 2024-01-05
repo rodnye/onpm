@@ -50,7 +50,7 @@ function exec (argv) {
     
     // Exclude modules if exists
     let ignoredModules = [];
-    if (!args["-f"] && !argsMap["--force"]) {
+    if (!argsMap["-f"] && !argsMap["--force"]) {
         let downloadedModules = new Json(HOME + "/package.json");
         downloadedModules = Object.keys(downloadedModules.data.dependencies);
         
