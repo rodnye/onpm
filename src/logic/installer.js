@@ -70,6 +70,10 @@ class Installer {
         // Stop if already exists
         if (this.modulesCopied[moduleName]) return false;
         
+        // Stop if not downloaded
+        if (!this._existsModule(moduleName)) return false; 
+        
+        
         const fromDir = homeModulesDir + "/" + moduleName;
         const toDir = this.modulesDir + "/" + moduleName;
         const pkgDir = fromDir + "/package.json";
@@ -137,7 +141,7 @@ class Installer {
         if (jsonData.dependencies) {
             for (const depName in jsonData.dependencies) {
                 const version = jsonData.dependencies[depName];
-                handleRecursive(depName);
+                handleRecursive(depName); 
                 this.copyModule(depName, {version});
             }
         }
