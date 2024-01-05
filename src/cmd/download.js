@@ -60,7 +60,9 @@ function exec (argv) {
                 ignoredModules.push(item);
                 return false;
             }
+            return true;
         });
+        
     }
     
     // Show ignored modules 
