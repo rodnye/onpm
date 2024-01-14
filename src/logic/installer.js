@@ -249,7 +249,7 @@ class Installer {
         //
         let saveAs = options.saveAs;
         if (options.saveAs) {
-            if (!this.pkg.data[saveAs]) this.pkg.data[saveAs];
+            if (!this.pkg.data[saveAs]) this.pkg.data[saveAs] = {};
             this.pkg.data[saveAs][moduleName] = version;
             Object.sort(this.pkg.data[saveAs]); 
             this.pkg.save(2);
