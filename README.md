@@ -2,12 +2,12 @@
 
 Offline Npm Manager is a command line tool that allows you to install and manage NPM modules without an internet connection.
 
-## Setup
+## Get Started
 
 To install Offline Npm Manager, run the following command:
 
 ```sh
-npm i -g onpm@github:rodnye/onpm
+npm i -g onpm-cli
 ```
 
 Once installed, you can use the `onpm` command.
@@ -20,7 +20,7 @@ onpm --version
 
 ## CLI
 
-### download
+### 📥 Download and save in cache
 
 To use Offline Npm Manager, you need to download the required modules first. Use the following command:
 
@@ -46,7 +46,7 @@ Flags:
 | `-f`, `--force`           | Download all modules ignoring if already downloaded   |
 | `--fast`                  | Download all modules quickly in a single process      |
 
-### install
+### 💽 Install a module
 
 To install the downloaded modules in your NodeJs project, use the following command:
 
@@ -74,10 +74,7 @@ Flags:
 
 ## Contributions
 
-Contributions are welcome! If you encou
-nter any issues or have improvements in
-mind, feel free to open a new issue or s
-ubmit a pull request.
+Contributions are welcome! If you encounter any issues or have improvements in mind, feel free to open a new issue or submit a pull request.
 
 ## License
 

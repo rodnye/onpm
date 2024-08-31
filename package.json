@@ -1,13 +1,33 @@
 {
-  "name": "onpm",
-  "version": "2.4.3",
-  "description": "offline npm manager",
+  "name": "onpm-cli",
+  "version": "2.4.4",
+  "description": "Offline modules manager",
   "main": "src/main.js",
-  "bin": "bin/onpm",
+  "bin": {
+    "onpm": "bin/onpm"
+  },
+  "keywords": [
+    "dependency manager",
+    "install",
+    "installer",
+    "link",
+    "modules",
+    "npm",
+    "package manager"
+  ],
+  "files": [
+    "bin",
+    "src"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RodnyE/onpm.git"
+    "url": "git+https://github.com/rodnye/onpm.git"
   },
+  "bugs": {
+    "url": "https://github.com/rodnye/onpm/issues"
+  },
+  "license": "MIT",
+  "author": "Rodny Estrada <rrodnyestrada1@gmail.com>",
   "dependencies": {
     "colors": "^1.4.0",
     "ora-classic": "^5.4.2"
