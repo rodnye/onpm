@@ -1,6 +1,6 @@
 {
   "name": "onpm-cli",
-  "version": "2.4.4",
+  "version": "2.4.5",
   "description": "Offline modules manager",
   "main": "src/main.js",
   "bin": {
@@ -17,7 +17,8 @@
   ],
   "files": [
     "bin",
-    "src"
+    "src",
+    "config.js"
   ],
   "repository": {
     "type": "git",
