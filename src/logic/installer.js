@@ -111,7 +111,7 @@ class Installer {
                 const binDir = path.join(fromDir, binaries[binName]);
                 const toBinDir = path.join(binariesDir, binName);
                 
-                fs.copyFileSync(binDir, toBinDir);
+                if (fs.existsSync(binDir)) fs.copyFileSync(binDir, toBinDir);
             }
         }
         
