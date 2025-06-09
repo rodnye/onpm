@@ -2,7 +2,7 @@
   "name": "onpm-cli",
   "version": "2.4.6",
   "description": "Offline modules manager",
-  "main": "src/main.js",
+  "main": "dist/main.js",
   "bin": {
     "onpm": "bin/onpm"
   },
@@ -17,9 +17,13 @@
   ],
   "files": [
     "bin",
-    "src",
-    "config.js"
+    "dist"
   ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rodnye/onpm.git"
@@ -30,7 +34,21 @@
   "license": "MIT",
   "author": "Rodny Estrada <rrodnyestrada1@gmail.com>",
   "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "chalk": "^5.4.1",
     "colors": "^1.4.0",
-    "ora-classic": "^5.4.2"
+    "commander": "^14.0.0",
+    "execa": "^9.6.0",
+    "fs-extra": "^11.3.0",
+    "ora": "^8.2.0",
+    "ora-classic": "^5.4.2",
+    "semver": "^7.7.2"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.15.30",
+    "@types/semver": "^7.7.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3"
   }
 }
