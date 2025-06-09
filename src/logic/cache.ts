@@ -88,11 +88,8 @@ const savePackageFromTemp = async (
     }
 
     const { version: packageVersion } = await getPackageJson(currentPath);
-    const satisfiedVersion = getSatisfiesVersion(
-      metadata,
-      name,
-      requestedVersion
-    );
+    let satisfiedVersion = getSatisfiesVersion(metadata, name, requestedVersion) || requestedVersion;
+
     let version = semver.gte(satisfiedVersion, packageVersion)
       ? satisfiedVersion
       : packageVersion;
@@ -119,19 +116,10 @@ const savePackageFromTemp = async (
     }
 
     // add parent package with dependant of currentPackage
-    if (parentName) {
-      const parentFullName = parentName + "@" + parentVersion;
-      if (
-        !metadata.packages[name][version].dependants.includes(parentFullName)
-      ) {
-        metadata.packages[name][version].dependants.push(parentFullName);
-      }
-    } else {
-      if (
-        !metadata.packages[name][version].dependants.includes('@')
-      ) {
-        metadata.packages[name][version].dependants.push('@');
-      }
+    if (parentName && !metadata.packages[name][version].dependants.includes(parentName + "@" + parentVersion)) {
+      metadata.packages[name][version].dependants.push(parentName + "@" + parentVersion);
+    } else if (!parentName && !metadata.packages[name][version].dependants.includes('@')) {
+      metadata.packages[name][version].dependants.push('@');
     }
   }
 };

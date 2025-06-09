@@ -91,7 +91,7 @@ export const recursiveInstallFromCache = async (
     throw new Error(`Package ${name} not found in cache`);
   }
 
-  const satisfiesVersion = getSatisfiesVersion(metadata, name, version);
+  const satisfiesVersion = getSatisfiesVersion(metadata, name, version) || version;
   const cachedPackagePath = path.join(cacheStore, name, satisfiesVersion);
   let installPath: string;
 
@@ -116,7 +116,7 @@ export const recursiveInstallFromCache = async (
 
       await copyPackage(cachedPackagePath, conflictPath);
       const { dependencies } = metadata.packages[name][satisfiesVersion];
-      for (const [depName, depVersion] of Object.entries(dependencies)) {
+      for (const [depName, depVersion] of Object.entries(dependencies || {})) {
         await recursiveInstallFromCache(
           depName,
           depVersion,
@@ -134,7 +134,7 @@ export const recursiveInstallFromCache = async (
 
   await copyPackage(cachedPackagePath, installPath);
   const { dependencies } = metadata.packages[name][satisfiesVersion];
-  for (const [depName, depVersion] of Object.entries(dependencies)) {
+  for (const [depName, depVersion] of Object.entries(dependencies || {})) {
     await recursiveInstallFromCache(
       depName,
       depVersion,
