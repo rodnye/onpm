@@ -20,7 +20,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --sourceMap false --declaration false",
     "dev": "tsc --watch",
     "prepublishOnly": "npm run build"
   },
