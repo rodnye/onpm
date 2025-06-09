@@ -6,6 +6,14 @@ export const printError = (msg: string) => {
   print(chalk.bgRed("Ups...") + " " + chalk.red(msg));
 };
 
+export const printWarning = (msg: string) => {
+  print(chalk.bgYellow.black("Warning:") + " " + chalk.yellow(msg));
+};
+
+export const printSuccess = (msg: string) => {
+  print(chalk.bgGreen.black("Success:") + " " + chalk.green(msg));
+};
+
 export const printList = (
   items: string[],
   options?: {

@@ -11,3 +11,7 @@ export const sortRecord = (
     object[key] = value;
   }
 };
+
+export const isNil = (value:any) => {
+   return value === null || value === undefined;
+}

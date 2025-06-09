@@ -7,8 +7,10 @@ import { PackageParseException } from "./error";
 const metadataPath = path.join(globalStore, "/metadata.json");
 let metadata: IMetadata;
 
+export type IPackageIdentifier = [name: string, version: string];
+
 /**
- *
+ * Retrieve metadata from the JSON file.
  */
 export const getMetadata = async () => {
   if (!metadata) {
@@ -23,7 +25,7 @@ export const getMetadata = async () => {
 };
 
 /**
- *
+ * Update using a provided updater function.
  */
 export const updateMetadata = async (
   updater: (meta: IMetadata) => IMetadata | undefined
@@ -35,6 +37,21 @@ export const updateMetadata = async (
   }
 };
 
+/**
+ * Read and return the `package.json` file from the specified package path.
+ */
+export const getPackageJson = async (
+  packagePath: string
+): Promise<IPackageJSON> => {
+  const jsonPath = path.join(packagePath, "/package.json");
+
+  await access(jsonPath);
+  return await readJSON(jsonPath, "utf-8");
+};
+
+/**
+ * Update the `package.json` file using a provided updater function.
+ */
 export const updatePackageJSON = async (
   packagePath: string,
   updater: (meta: IPackageJSON) => IPackageJSON | undefined
@@ -47,24 +64,15 @@ export const updatePackageJSON = async (
 };
 
 /**
- *
- */
-export const getPackageJson = async (
-  packagePath: string
-): Promise<IPackageJSON> => {
-  const jsonPath = path.join(packagePath, "/package.json");
-
-  await access(jsonPath);
-  return await readJSON(jsonPath, "utf-8");
-};
-
-/**
- *
+ * Retrieve the dependencies as key-value pairs from the `package.json` file.
  */
 export const getDependenciesEntries = async (packagePath: string) => {
   return Object.entries((await getPackageJson(packagePath)).dependencies || {});
 };
 
+/**
+ * Get the version of the package from its `package.json` file.
+ */
 export const getPackageVersion = async (packagePath: string) => {
   try {
     const pkgJson = await getPackageJson(packagePath);
@@ -75,34 +83,40 @@ export const getPackageVersion = async (packagePath: string) => {
 };
 
 /**
- * Get best matching version
+ * Find the best matching version of a package that satisfies a target version.
  */
 export const getSatisfiesVersion = (
   metadata: IMetadata,
   name: string,
   targetVersion: string
 ) => {
-  const versions = Object.keys(metadata.packages[name]);
+  // Handle 'latest' specially
+  if (targetVersion === "latest") {
+    const versions = Object.keys(metadata.packages[name] || {});
+    if (versions.length === 0) return null;
+
+    // Find the highest version number
+    return versions.reduce((max, current) => {
+      return semver.gt(current, max) ? current : max;
+    }, "0.0.0");
+  }
+
+  // Normal semver processing
+  const versions = Object.keys(metadata.packages[name] || {});
   for (const version of versions) {
     if (semver.satisfies(version, targetVersion)) return version;
   }
 
-  return semver.minVersion(targetVersion)!.toString();
-};
-
-export type IPackageIdentifier = {
-  name: string;
-  version: string;
-  full?: string;
+  return semver.minVersion(targetVersion)?.toString() || null;
 };
 
 /**
- * Parse a package name and version from a string or separate parameters
+ * Parse a package name and version from a string or separate parameters.
  */
 export const parsePackageIdentifier = (
   input: string,
   version?: string
-): IPackageIdentifier => {
+): [string, string] => {
   if (!input || typeof input !== "string") {
     throw new PackageParseException("Package identifier cannot be empty");
   }
@@ -134,21 +148,21 @@ export const parsePackageIdentifier = (
     extractedVersion = "latest";
   }
 
-  const cleanedVersion = semver.validRange(extractedVersion);
-  if (!cleanedVersion && extractedVersion !== "latest") {
-    throw new PackageParseException(
-      `Invalid version or range: ${extractedVersion}`
-    );
+  // Skip semver validation for 'latest'
+  if (extractedVersion !== "latest") {
+    const cleanedVersion = semver.validRange(extractedVersion);
+    if (!cleanedVersion) {
+      throw new PackageParseException(
+        `Invalid version or range: ${extractedVersion}`
+      );
+    }
   }
 
-  return {
-    name,
-    version: extractedVersion,
-  };
+  return [name, extractedVersion];
 };
 
 /**
- * Validate package name according to npm naming rules
+ * Validate a package name according to npm naming rules.
  */
 export const isValidPackageName = (name: string) => {
   if (!name) return false;
@@ -168,7 +182,7 @@ export const isValidPackageName = (name: string) => {
 };
 
 /**
- * Copy package without node_modules
+ * Copy a package directory to a new location, excluding the `node_modules` folder.
  */
 export const copyPackage = async (source: string, destination: string) => {
   await copy(source, destination, {

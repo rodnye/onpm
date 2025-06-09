@@ -59,7 +59,7 @@ export class PackagesException extends Exception {
       message: `Packages errors: ${params.message}`,
       details:
         params.details ||
-        `Error processing the packages: ${packages.map((pkg) => pkg.name).join(", ")}`,
+        `Error processing the packages: ${packages.map(([name]) => name).join(", ")}`,
       metadata: { packages, ...params.metadata },
       cause: params.cause,
     });

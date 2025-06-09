@@ -1,7 +1,9 @@
 import { Command } from "commander";
 import { cachePackage } from "../logic/cache";
 import { getPackageJson } from "../utils/pkg";
-import { print, printList, printStep } from "../utils/print";
+import { printError, printList, printStep, printWarning, printSuccess } from "../utils/print";
+import chalk from "chalk";
+import { exit } from "process";
 
 export const cacheCommand = new Command("cache");
 
@@ -16,7 +18,17 @@ cacheCommand
     let packages: string[];
 
     if (!packagesInput || packagesInput.length === 0) {
-      const json = await getPackageJson(process.cwd());
+      let json;
+
+      try {
+        json = await getPackageJson(process.cwd());
+      } catch (_) {
+        printError(
+          "The package.json doesn't exists, please run " +
+            chalk.bgGray.white("npm init") + "."
+        );
+        return exit(1);
+      }
       packages = [];
       if (!options.saveDev) {
         packages.push(...Object.keys(json.dependencies || {}));
@@ -25,13 +37,25 @@ cacheCommand
       if (!options.saveProd) {
         packages.push(...Object.keys(json.devDependencies || {}));
       }
+
+      if (packages.length === 0) {
+        printWarning("No dependencies found to cache.");
+        return exit(0);
+      }
     } else {
       packages = packagesInput;
     }
 
-    await printStep(
-      "Downloading dependencies...",
-      async () => await cachePackage(packages)
-    );
+    try {
+      await printStep(
+        "Downloading dependencies...",
+        async () => await cachePackage(packages)
+      );
+    } catch (_) {
+      printError("Failed to cache some packages.");
+      return exit(1);
+    }
+
     printList(packages, { bullet: "+", color: "blue" });
+    printSuccess("Cached " + packages.length + " packages.");
   });

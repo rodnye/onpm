@@ -27,7 +27,7 @@ interface TopInstallOptions {
  * Top level installation from cache
  */
 export const installFromCache = async (
-  packageNames: string[],
+  packageEntries: [string, string][],
   options?: TopInstallOptions
 ) => {
   const {
@@ -37,28 +37,24 @@ export const installFromCache = async (
   } = options || {};
 
   const requests: IPackageIdentifier[] = [];
-  const requestsWithError = [];
-  for (const packageName of packageNames) {
-    const parsed = parsePackageIdentifier(packageName);
-    const request = {
-      name: parsed.name,
-      version: parsed.version,
-    };
+  const requestsWithError: IPackageIdentifier[] = [];
+  for (const [packageName, packageVersion] of packageEntries) {
+    const parsed = parsePackageIdentifier(packageName, packageVersion);
 
     if (
-      !getSatisfiesVersion(await getMetadata(), parsed.name, parsed.version)
+      !getSatisfiesVersion(await getMetadata(), parsed[0], parsed[1])
     ) {
-      requestsWithError.push(request);
+      requestsWithError.push(parsed);
     }
 
-    requests.push(request);
+    requests.push(parsed);
   }
 
   if (requestsWithError.length) {
     throw new InstallsException(requestsWithError);
   }
 
-  for (const { name, version } of requests) {
+  for (const [name, version] of requests) {
     await recursiveInstallFromCache(name, version, process.cwd(), undefined, {
       force,
     });
@@ -67,7 +63,7 @@ export const installFromCache = async (
   if (saveIn != "none")
     updatePackageJSON(destination, (pkg) => {
       const depTarget = saveIn == "dev" ? "devDependencies" : "dependencies";
-      for (const { name, version } of requests) {
+      for (const [name, version] of requests) {
         if (!pkg[depTarget]) pkg[depTarget] = {};
         pkg[depTarget][name] = version;
       }
@@ -89,7 +85,7 @@ export const recursiveInstallFromCache = async (
   options: InstallOptions = {}
 ) => {
   const metadata = await getMetadata();
-  const { name, version } = parsePackageIdentifier(packageName, targetVersion);
+  const [name, version] = parsePackageIdentifier(packageName, targetVersion);
 
   if (!metadata.packages[name]) {
     throw new Error(`Package ${name} not found in cache`);

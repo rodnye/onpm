@@ -18,7 +18,7 @@ import { pathExists, mkdirp, remove, mkdirSync } from "fs-extra";
  *
  */
 export const cachePackage = async (inputs: string[]) => {
-  const { name, version } = parsePackageIdentifier(inputs[0]);
+  const [name, version] = parsePackageIdentifier(inputs[0]);
 
   for (const input of inputs) {
     // validate inputs
@@ -76,7 +76,7 @@ const savePackageFromTemp = async (
 
     if (!currentPath)
       throw new InstallsException(
-        [{ name, version: requestedVersion }],
+        [[name, requestedVersion]],
         new Error(
           `The package ${name}@${requestedVersion} not installed yet, the npm installation is corrupted`
         )
