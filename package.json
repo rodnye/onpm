@@ -1,6 +1,6 @@
 {
   "name": "onpm-cli",
-  "version": "2.4.6",
+  "version": "3.0.0-alpha",
   "description": "Offline modules manager",
   "main": "dist/main.js",
   "bin": {
