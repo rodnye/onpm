@@ -1,4 +1,5 @@
 type IMetadata = {
+  version: 'v3';
   packages: {
     [packageName: string]: {
       [packageVersion: string]: {

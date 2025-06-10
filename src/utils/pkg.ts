@@ -17,7 +17,7 @@ export const getMetadata = async () => {
     if (existsSync(metadataPath)) {
       metadata = await readJSON(metadataPath, "utf-8");
     } else {
-      metadata = { packages: {} };
+      metadata = { version: 'v3', packages: {} };
     }
   }
 

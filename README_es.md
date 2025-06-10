@@ -24,7 +24,7 @@ onpm --version
 
 Este script fue creado principalmente para reducir la dependencia de una conexión a internet al instalar módulos de npm. Esto es especialmente útil en contextos donde el acceso a internet es limitado o restringido, como para usuarios en Cuba.
 
-A diferencia de herramientas como `pnpm` o `yarn`, que optimizan la instalación de paquetes mediante técnicas como enlaces simbólicos o almacenamiento compartido, `onpm` se centra en la capacidad de operar completamente sin conexión. Esto significa que puedes descargar y almacenar módulos previamente en un entorno conectado y luego usarlos en proyectos sin necesidad de acceso a internet. Esto funciona con una estructura de directorios similar a `npm` al instalar `node_modules`, asegurando compatibilidad con flujos de trabajo y herramientas existentes que dependen del diseño estándar de `node_modules`.
+A diferencia de herramientas como `pnpm` o `yarn`, que optimizan la instalación de paquetes mediante técnicas como enlaces simbólicos o almacenamiento compartido, `onpm` se centra en la capacidad de operar completamente sin conexión. Esto significa que puedes descargar y almacenar módulos previamente en un entorno conectado y luego usarlos en proyectos sin necesidad de acceso a internet. Esto funciona con `npm` en segundo plano para descargar las dependencias, asegurando compatibilidad con flujos de trabajo y herramientas existentes que dependen del diseño estándar de `node_modules`.
 
 ## CLI
 
